@@ -73304,16 +73304,6 @@ void main() {
 			this.pickSphere = new Mesh(sg, sm);
 			this.scene.add(this.pickSphere);
 
-			{
-				const sg = new SphereGeometry(2);
-				const sm = new MeshNormalMaterial();
-				const s = new Mesh(sg, sm);
-
-				s.position.set(589530.450, 231398.860, 769.735);
-
-				this.scene.add(s);
-			}
-
 			this.viewerPickSphere = new Mesh(sg, sm);
 		}
 
