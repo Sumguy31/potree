@@ -29,7 +29,10 @@
 	<script src="../libs/jstree/jstree.js"></script>
 	<script src="../build/potree/potree.js"></script>
 	<script src="../libs/plasio/js/laslaz.js"></script>
-
+	
+	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
+	<!-- INCLUDE SETTINGS HERE -->
+	
 	<div class="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
 		<div id="potree_render_area" style="background-image: url('../build/potree/resources/images/background.jpg');"></div>
 		<div id="potree_sidebar_container"> </div>
@@ -41,18 +44,32 @@
 	
 		window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
 		
-		viewer.setDescription("Potree projects that were exported (Scene → Export → Potree) can be loaded with viewer.loadProject(url). ");
+		viewer.setEDLEnabled(true);
+		viewer.setFOV(60);
+		viewer.setPointBudget(1_000_000);
+		viewer.loadSettingsFromURL();
 		
-		viewer.loadGUI().then( () => {
+		viewer.setDescription("Loading LAZ compressed octree format");
+		
+		viewer.loadGUI(() => {
 			viewer.setLanguage('en');
-			$("#menu_tools").next().show();
-			viewer.toggleSidebar();
+			$("#menu_appearance").next().show();
+			//viewer.toggleSidebar();
 		});
 		
-		viewer.loadProject("./resources/sorvilier.json").then( () => {
-			console.log("project loaded");
+		let url = "../pointclouds/ciclongroutePotree/metadata.json";
+		Potree.loadPointCloud(url).then(e => {
+			let pointcloud = e.pointcloud;
+			let material = pointcloud.material;
+
+			material.activeAttributeName = "rgba";
+			material.minSize = 2;
+			material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+
+			viewer.scene.addPointCloud(pointcloud);
+			viewer.fitToScreen();
 		});
-		
+				
 	</script>
 	
 	
